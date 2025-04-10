@@ -33,7 +33,7 @@ const questions = {
       // Set up answer submission
       const submitButton = document.getElementById('submit-answer');
       submitButton.onclick = () => checkAnswer(currentQuestion, value);
-    });
+    }); ///
   });
   
   // view answer
