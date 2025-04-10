@@ -5,32 +5,29 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Jeopardy Game</title>
   <link rel="stylesheet" href="style.css">
+  <!-- Add Axios CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
-<body> ///jeopardy game
-  <div id="board">
-    <div class="category" id="category1">Science</div>
-    <div class="category" id="category2">History</div>
-    <div class="category" id="category3">Literature</div>
-    <div class="category" id="category4">Geography</div>
-    <div class="category" id="category5">Movies</div>
+<body>
+  <h1>Jeopardy Game</h1>
 
-    <div class="question" data-category="category1" data-value="100">100</div>
-    <div class="question" data-category="category1" data-value="200">200</div>
-    <div class="question" data-category="category1" data-value="300">300</div>
-    <div class="question" data-category="category1" data-value="400">400</div>
-    <div class="question" data-category="category1" data-value="500">500</div>
+  <!-- Categories will be inserted dynamically here -->
+  <div id="categories"></div>
 
-    <!-- Repeat similar structure for other categories -->
-  </div>
+  <!-- Questions will be inserted dynamically based on the selected category -->
+  <div id="question-board"></div>
 
-  <div id="question-container">
+  <!-- Question and answer input container -->
+  <div id="question-container" style="display: none;">
     <p id="question-text"></p>
     <input type="text" id="answer-input" placeholder="Your answer">
     <button id="submit-answer">Submit Answer</button>
   </div>
 
+  <!-- Display score -->
   <p id="score">Score: 0</p>
 
-  <script src="script.js"></script>
+  <!-- Link to your JavaScript file -->
+  <script type="module" src="script.js"></script>
 </body>
-</html>
+</html> //
