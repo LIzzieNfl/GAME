@@ -71,7 +71,7 @@ async function fetchQuestions(categoryId) {
   } catch (error) {
     console.error("Error fetching questions:", error);
   }
-}
+} //.
 
 // Check if the answer is correct and update the score
 function checkAnswer(currentQuestion, value) {
