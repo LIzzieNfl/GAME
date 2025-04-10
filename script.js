@@ -19,7 +19,7 @@ const questions = {
   
   let score = 0;
   
-  // Handle question click
+  // click here
   document.querySelectorAll('.question').forEach((question) => {
     question.addEventListener('click', function() {
       const category = this.dataset.category;
@@ -36,7 +36,7 @@ const questions = {
     });
   });
   
-  // Check user's answer
+  // view answer
   function checkAnswer(currentQuestion, value) {
     const userAnswer = document.getElementById('answer-input').value.trim();
     const correctAnswer = currentQuestion.answer;
