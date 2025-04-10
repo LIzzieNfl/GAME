@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jeopardy Game</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="board">
+    <div class="category" id="category1">Science</div>
+    <div class="category" id="category2">History</div>
+    <div class="category" id="category3">Literature</div>
+    <div class="category" id="category4">Geography</div>
+    <div class="category" id="category5">Movies</div>
+
+    <div class="question" data-category="category1" data-value="100">100</div>
+    <div class="question" data-category="category1" data-value="200">200</div>
+    <div class="question" data-category="category1" data-value="300">300</div>
+    <div class="question" data-category="category1" data-value="400">400</div>
+    <div class="question" data-category="category1" data-value="500">500</div>
+
+    <!-- Repeat similar structure for other categories -->
+  </div>
+
+  <div id="question-container">
+    <p id="question-text"></p>
+    <input type="text" id="answer-input" placeholder="Your answer">
+    <button id="submit-answer">Submit Answer</button>
+  </div>
+
+  <p id="score">Score: 0</p>
+
+  <script src="script.js"></script>
+</body>
+</html>
