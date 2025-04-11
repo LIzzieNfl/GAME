@@ -1,96 +1,52 @@
-// To store questions dynamically
-let questions = {};
-let score = 0;
-
-// Fetch categories from the API
-async function fetchCategories() {
-  try {
-    const response = await axios.get('https://rithm-jeopardy.herokuapp.com/api/categories?count=10');
+// Use Axios to fetch the categories from the API
+axios.get('https://rithm-jeopardy.herokuapp.com/api/categories?count=5')
+  .then(response => {
     const categories = response.data;
+    const categoriesContainer = document.getElementById('categories');
     
-    // Display categories dynamically
-    categories.forEach((category) => {
-      const categoryButton = document.createElement('button');
-      categoryButton.textContent = category.title;
-      categoryButton.dataset.categoryId = category.id;
-      categoryButton.classList.add('category-button');
-      document.getElementById('categories').appendChild(categoryButton);
-    });
+    // Loop through the categories and create HTML for each one
+    categories.forEach(category => {
+      const categoryElement = document.createElement('button');
+      categoryElement.textContent = category.title; // Display the category title
+      categoryElement.classList.add('category'); // Add a class for styling (optional)
 
-    // Add event listeners to category buttons
-    document.querySelectorAll('.category-button').forEach(button => {
-      button.addEventListener('click', () => fetchQuestions(button.dataset.categoryId));
+      // Add a click event to fetch questions for the selected category
+      categoryElement.addEventListener('click', () => {
+        fetchCategoryQuestions(category.id);
+      });
+
+      categoriesContainer.appendChild(categoryElement); // Append category to the container
     });
-  } catch (error) {
-    console.error("Error fetching categories:", error);
-  }
-}
+  })
+  .catch(error => {
+    console.error('Error fetching categories:', error);
+  });
 
 // Fetch questions for the selected category
-async function fetchQuestions(categoryId) {
-  try {
-    const response = await axios.get(`https://rithm-jeopardy.herokuapp.com/api/category?id=${categoryId}`);
-    const categoryData = response.data;
+function fetchCategoryQuestions(categoryId) {
+  axios.get(`https://rithm-jeopardy.herokuapp.com/api/category?id=${categoryId}`)
+    .then(response => {
+      const questions = response.data;
+      const questionBoard = document.getElementById('question-board');
+      questionBoard.innerHTML = ''; // Clear previous questions
 
-    // Store questions for the selected category
-    questions = {
-      [categoryData.title]: categoryData.clues.reduce((acc, clue) => {
-        acc[clue.value] = { question: clue.question, answer: clue.answer };
-        return acc;
-      }, {})
-    };
-
-    // Display question options dynamically
-    const questionBoard = document.getElementById('question-board');
-    questionBoard.innerHTML = ''; // Clear previous questions
-    Object.keys(questions[categoryData.title]).forEach((value) => {
-      const questionButton = document.createElement('button');
-      questionButton.textContent = `$${value}`;
-      questionButton.dataset.category = categoryData.title;
-      questionButton.dataset.value = value;
-      questionButton.classList.add('question');
-      questionBoard.appendChild(questionButton);
-    });
-
-    // Add event listeners for each question
-    document.querySelectorAll('.question').forEach((question) => {
-      question.addEventListener('click', function () {
-        const category = this.dataset.category;
-        const value = this.dataset.value;
-        const currentQuestion = questions[category][value];
-
-        // Display question and input
-        document.getElementById('question-container').style.display = 'block';
-        document.getElementById('question-text').textContent = currentQuestion.question;
-
-        // Set up answer submission
-        const submitButton = document.getElementById('submit-answer');
-        submitButton.onclick = () => checkAnswer(currentQuestion, value);
+      // Display the questions
+      questions.forEach((question, index) => {
+        const questionElement = document.createElement('div');
+        questionElement.classList.add('question');
+        questionElement.innerHTML = `
+          <p><strong>Question ${index + 1}: ${question.question}</strong></p>
+          <button onclick="showAnswer('${question.answer}')">Show Answer</button>
+        `;
+        questionBoard.appendChild(questionElement);
       });
+    })
+    .catch(error => {
+      console.error('Error fetching category questions:', error);
     });
-  } catch (error) {
-    console.error("Error fetching questions:", error);
-  }
-} //.
-
-// Check if the answer is correct and update the score
-function checkAnswer(currentQuestion, value) {
-  const userAnswer = document.getElementById('answer-input').value.trim();
-  const correctAnswer = currentQuestion.answer;
-
-  if (userAnswer.toLowerCase() === correctAnswer.toLowerCase()) {
-    score += parseInt(value);
-    alert("Correct!"); //
-  } else {
-    score -= parseInt(value);
-    alert("Incorrect. The correct answer was: " + correctAnswer);
-  }
-
-  // Update score and hide question container
-  document.getElementById('score').textContent = "Score: " + score;
-  document.getElementById('question-container').style.display = 'none';
-  document.getElementById('answer-input').value = '';
 }
 
-// Initialize the game by fetching categories
-fetchCategories();
+// Show the answer to the selected question
+function showAnswer(answer) {
+  alert(`The answer is: ${answer}`);
+}
