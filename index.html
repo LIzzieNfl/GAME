@@ -1,12 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Jeopardy Game</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+
+  <!-- Categories buttons will be inserted here -->
+  <div id="categories"></div>
+
+  <!-- Main game board -->
   <div id="board">
     <div class="category" id="category1">Science</div>
     <div class="category" id="category2">History</div>
@@ -19,18 +24,20 @@
     <div class="question" data-category="category1" data-value="300">300</div>
     <div class="question" data-category="category1" data-value="400">400</div>
     <div class="question" data-category="category1" data-value="500">500</div>
-
-    <!-- Repeat similar structure for other categories -->
+    <!-- You can add more questions for other categories here -->
   </div>
 
+  <!-- Question/answer area -->
   <div id="question-container">
     <p id="question-text"></p>
-    <input type="text" id="answer-input" placeholder="Your answer">
+    <input type="text" id="answer-input" placeholder="Your answer" />
     <button id="submit-answer">Submit Answer</button>
   </div>
 
   <p id="score">Score: 0</p>
 
+  <!-- Axios CDN and your game script -->
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script src="script.js"></script>
 </body>
 </html>

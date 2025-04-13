@@ -1,52 +1,78 @@
-// Use Axios to fetch the categories from the API
+// Fetch categories and display buttons
 axios.get('https://rithm-jeopardy.herokuapp.com/api/categories?count=5')
   .then(response => {
     const categories = response.data;
     const categoriesContainer = document.getElementById('categories');
-    
-    // Loop through the categories and create HTML for each one
-    categories.forEach(category => {
-      const categoryElement = document.createElement('button');
-      categoryElement.textContent = category.title; // Display the category title
-      categoryElement.classList.add('category'); // Add a class for styling (optional)
 
-      // Add a click event to fetch questions for the selected category
-      categoryElement.addEventListener('click', () => {
+    categories.forEach(category => {
+      const categoryButton = document.createElement('button');
+      categoryButton.textContent = category.title;
+      categoryButton.addEventListener('click', () => {
         fetchCategoryQuestions(category.id);
       });
 
-      categoriesContainer.appendChild(categoryElement); // Append category to the container
+      categoriesContainer.appendChild(categoryButton);
     });
   })
   .catch(error => {
     console.error('Error fetching categories:', error);
   });
 
-// Fetch questions for the selected category
+// Fetch and display questions from selected category
 function fetchCategoryQuestions(categoryId) {
   axios.get(`https://rithm-jeopardy.herokuapp.com/api/category?id=${categoryId}`)
     .then(response => {
-      const questions = response.data;
-      const questionBoard = document.getElementById('question-board');
-      questionBoard.innerHTML = ''; // Clear previous questions
+      const data = response.data;
+      const questionBoard = document.getElementById('board');
+      questionBoard.innerHTML = ''; // Clear board
 
-      // Display the questions
-      questions.forEach((question, index) => {
-        const questionElement = document.createElement('div');
-        questionElement.classList.add('question');
-        questionElement.innerHTML = `
-          <p><strong>Question ${index + 1}: ${question.question}</strong></p>
-          <button onclick="showAnswer('${question.answer}')">Show Answer</button>
-        `;
-        questionBoard.appendChild(questionElement);
-      });
+      // Display category title
+      const titleDiv = document.createElement('div');
+      titleDiv.className = 'category';
+      titleDiv.textContent = data.title;
+      questionBoard.appendChild(titleDiv);
+
+      // Add question values
+      for (let clue of data.clues.slice(0, 5)) { // limit to 5
+        const questionDiv = document.createElement('div');
+        questionDiv.className = 'question';
+        questionDiv.textContent = `$${clue.value || 100}`;
+        questionDiv.addEventListener('click', () => {
+          showQuestion(clue);
+        });
+        questionBoard.appendChild(questionDiv);
+      }
     })
     .catch(error => {
-      console.error('Error fetching category questions:', error);
+      console.error('Error fetching questions:', error);
     });
 }
 
-// Show the answer to the selected question
-function showAnswer(answer) {
-  alert(`The answer is: ${answer}`);
+function showQuestion(clue) {
+  const container = document.getElementById('question-container');
+  const questionText = document.getElementById('question-text');
+  const answerInput = document.getElementById('answer-input');
+  const submitButton = document.getElementById('submit-answer');
+  const scoreDisplay = document.getElementById('score');
+
+  container.style.display = 'block';
+  questionText.textContent = clue.question;
+  answerInput.value = '';
+
+  submitButton.onclick = function () {
+    const userAnswer = answerInput.value.trim().toLowerCase();
+    const correctAnswer = clue.answer.trim().toLowerCase();
+    let currentScore = parseInt(scoreDisplay.textContent.replace('Score: ', ''));
+
+    if (userAnswer === correctAnswer) {
+      currentScore += clue.value || 100;
+      alert('Correct!');
+    } else {
+      currentScore -= clue.value || 100;
+      alert(`Incorrect! The correct answer was: ${clue.answer}`);
+    }
+
+    scoreDisplay.textContent = `Score: ${currentScore}`;
+    container.style.display = 'none';
+  };
 }
